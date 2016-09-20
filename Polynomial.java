@@ -6,7 +6,7 @@ public class Polynomial {
 
     static int [][] matrix;
     static int [] anscolumn;
-    static int [] coefs;           // Set of coefficients of the resulting polynomial
+    static float [] coefs;           // Set of coefficients of the resulting polynomial
     static int degree;             // The number of data points provided AND the number of coefficients in the resulting polynomial
                                    // Note that the final polynomial will have degree (degree-1)
     static ArrayList <Tuple> vals;
@@ -27,53 +27,131 @@ public class Polynomial {
         degree = Integer.parseInt(inFile.nextLine());
         String[] line = new String[2];
 
+        // Reads from the data file and fills vals with tuples of the supplied values
         for (int i = 0; i < degree; i++) {
             line = inFile.nextLine().split(" ");
-            Tuple t = new Tuple(Integer.parseInt(line[0]), Integer.parseInt(line[1]));
-            System.out.println(t);
-            vals.add(t);
+            vals.add(new Tuple(Integer.parseInt(line[0]), Integer.parseInt(line[1])));
         }
 
-        coefs = new int[degree];
         anscolumn = new int[degree];
-
-        fillMatrix();
-
-        System.out.println(Arrays.toString(anscolumn));
+        matrix = fillMatrix(new int[degree][degree]);
+        cramers(matrix, anscolumn);
+        coefs = cramers(matrix, anscolumn);             // Coefs contains the coefficients of the resulting polynomial of degree (degree-1)
+        System.out.println(Arrays.toString(coefs));
+        System.out.println(writeLatex(coefs));
+        createLatexDoc(writeLatex(coefs));              // Experimental – generates latex document
 
     }
 
-    // Finds determinant of matrix
+    public static String writeLatex (float[] coefs) {
+        int degree = coefs.length;
+        String document = "\\documentclass[30pt]{article}\n" +
+        "\\begin{document}\n$$";
+        String eq = convertToPolynomial(coefs);
+        document += eq + "$$\n\\end{document}";
+        return document;
+    }
 
-    /*
-    public int findDet (int [][] matrix) {
-        if (matrix[0].length == 2) {
-            return (matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0]);
+    // Creates and opens a pdf with latex of the resulting polynomial
+    public static void createLatexDoc (String s) {
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter("result.tex", "UTF-8");
         }
-        else {
+        catch (Exception e) {
+            System.out.println(e);
+        }
+        writer.print(s);
+        writer.close();
 
+        Runtime p = Runtime.getRuntime();
+        try {
+            p.exec("pdflatex result.tex");
+            p.exec("open result.pdf");
+        }
+        catch (IOException e) {
+            System.out.println(e);
         }
     }
-    */
 
-    public static void fillMatrix() {
+    // Takes the set of coefficients and converts it to a standard looking polynomial
+    public static String convertToPolynomial(float[] coefs) {
+        String s = "";
+        int degree = coefs.length;
         for (int i = 0; i < degree; i ++) {
+            if (coefs[i] > 0 && s != "") {
+                s += "  +  ";
+            }
+            if (coefs[i] < 0) {
+                coefs[i]*= -1;
+                s += "  -  ";
+            }
+            if (coefs[i] != 1 && coefs[i] != 0) {
+                if (coefs[i] == (int) coefs[i]) {
+                    s += Integer.toString((int) coefs[i]);
+                }
+                else {
+                    s += Float.toString(coefs[i]);
+                }
+            }
+            if (degree-i-1 == 1) {
+                s += "x";
+            }
+            else if (degree-i-1 > 1) {
+                s += "x^" + Integer.toString(degree-i-1);
+            }
+        }
+        return "f(x) = " + s;
+    }
+
+    public static float[] cramers(int[][] matrix, int[] anscolumn) {
+        /*
+        int[][] matrix2 = matrix;
+        int degree = matrix.length;
+        float[] coefs = new float[degree];
+        int det_coef = findDet(matrix);
+        for (int i = 0; i < degree; i++) {
+            coefs[i] = (float) findDet(replaceC(matrix2, anscolumn, i))/det_coef;
+        }
+
+        return coefs;
+        */
+        int[][] matrix2 = cloneArray(matrix);
+        int degree = matrix.length;
+        float[] coefs = new float[degree];
+        int coef_det = findDet(matrix2);
+        for (int i = 0; i < degree; i ++) {
+            coefs[i] = (float) findDet(replaceC(matrix2, anscolumn, i))/coef_det;
+        }
+        return coefs;
+    }
+
+
+    // Populates a matrix of the coefficients to be solved
+    public static int[][] fillMatrix(int[][] matrix) {
+        int degree = matrix.length;
+        for (int i = 0; i < degree; i ++) {
+            int x = vals.get(i).getX();
             for (int j = 0; j < degree; j ++) {
-                matrix[i][j] = (int) Math.pow(vals.get(i).getX(), degree-i-1);
+                matrix[i][j] = (int) Math.pow(x, degree - (j+1));
             }
             anscolumn[i] = vals.get(i).getY();
-        }
-    }
-
-    public static int[][] replaceC (int[][] matrix, int[] newc, int c) {
-        int deg = matrix.length;
-        for (int i = 0; i < deg; i ++) {
-            matrix[i][c] = newc[i];
         }
 
         return matrix;
     }
 
+    // Replaces column c in a given matrix with a given column
+    public static int[][] replaceC (int[][] matrix, int[] newc, int c) {
+        int degree = matrix.length;
+        int[][] new_matrix = cloneArray(matrix);
+        for (int i = 0; i < degree; i ++) {
+            new_matrix[i][c] = newc[i];
+        }
+        return new_matrix;
+    }
+
+    // Removes row r and column c from a given matrix
     public static int[][] removeRC (int [][] matrix, int r, int c) {
         int deg = matrix.length;
         int[][] new_matrix = new int[deg-1][deg-1];
@@ -104,7 +182,7 @@ public class Polynomial {
         return new_matrix;
     }
 
-
+    // Finds determinant of a given matrix
     public static int findDet (int [][] matrix) {
         int deg = matrix.length;
         if (deg == 2) {
@@ -130,6 +208,15 @@ public class Polynomial {
             v += i;
         }
         return v;
+    }
+
+    public static int[][] cloneArray(int[][] src) {
+        int length = src.length;
+        int[][] target = new int[length][src[0].length];
+        for (int i = 0; i < length; i++) {
+            System.arraycopy(src[i], 0, target[i], 0, src[i].length);
+        }
+        return target;
     }
 
 }
