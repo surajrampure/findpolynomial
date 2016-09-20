@@ -38,21 +38,53 @@ public class Polynomial {
         cramers(matrix, anscolumn);
         coefs = cramers(matrix, anscolumn);             // Coefs contains the coefficients of the resulting polynomial of degree (degree-1)
         System.out.println(Arrays.toString(coefs));
-        System.out.println(writeLatex(coefs));
-        createLatexDoc(writeLatex(coefs));              // Experimental – generates latex document
+        createHTML("$$" + convertToPolynomial(coefs) + "$$");
+        //System.out.println(convertToPolynomial(coefs));
+        //createLatexDoc(writeLatex(coefs));              // Experimental – generates latex document
 
     }
 
     public static String writeLatex (float[] coefs) {
         int degree = coefs.length;
-        String document = "\\documentclass[30pt]{article}\n" +
-        "\\begin{document}\n$$";
+        String document = "\\documentclass[20pt]{article}\n" +
+        "\\usepackage{extsizes}" +
+        "\\thispagestyle{empty}" +
+        "\\begin{document}\n\\begin{Large}\n$$";
         String eq = convertToPolynomial(coefs);
-        document += eq + "$$\n\\end{document}";
+        document += eq + "$$\n\\end{Large}\n\\end{document}";
         return document;
     }
 
-    // Creates and opens a pdf with latex of the resulting polynomial
+    public static void createHTML (String s) {
+        String document = "<!DOCTYPE html PUBLIC" +
+                "\n<html>\n<head>\n<title>findpolynomial</title>" +
+                "<script type='text/x-mathjax-config'>" +
+                "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});" +
+                "\n</script>\n<script type='text/javascript'\nsrc=" +
+                "'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'>" +
+                "\n</script>\n</head>\n<body>\n<h2>FindPolynomial</h2>";
+
+        document += s + "\n</body>\n</html>";
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter("result.html", "UTF-8");
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
+        writer.print(document);
+        writer.close();
+
+        Runtime p = Runtime.getRuntime();
+        try {
+            p.exec("open result.html");
+        }
+        catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+
+    // Creates and opens a png with latex of the resulting polynomial
     public static void createLatexDoc (String s) {
         PrintWriter writer = null;
         try {
@@ -67,7 +99,10 @@ public class Polynomial {
         Runtime p = Runtime.getRuntime();
         try {
             p.exec("pdflatex result.tex");
-            p.exec("open result.pdf");
+            //p.exec("convert result.pdf result.png");
+            //p.exec("convert -density 500 result.png -resize 500 -quality 300 result.png");
+            p.exec("convert -density 300 -trim result.pdf -quality 100 result.png");
+            p.exec("open result.png");
         }
         catch (IOException e) {
             System.out.println(e);
@@ -86,20 +121,25 @@ public class Polynomial {
                 coefs[i]*= -1;
                 s += "  -  ";
             }
-            if (coefs[i] != 1 && coefs[i] != 0) {
+            if (coefs[i] != 0) {
                 if (coefs[i] == (int) coefs[i]) {
-                    s += Integer.toString((int) coefs[i]);
+                    if (coefs[i] != 1 || (coefs[i] == 1 && degree-i-1 == 0)) {
+                        s += Integer.toString((int) coefs[i]);
+                    }
                 }
                 else {
-                    s += Float.toString(coefs[i]);
+                    s += Float.toString(coefs[i]).substring(0, 4);
                 }
             }
-            if (degree-i-1 == 1) {
-                s += "x";
+            if (coefs[i] != 0) {
+                if (degree-i-1 == 1) {
+                    s += "x";
+                }
+                else if (degree-i-1 > 1) {
+                    s += "x^" + Integer.toString(degree-i-1);
+                }
             }
-            else if (degree-i-1 > 1) {
-                s += "x^" + Integer.toString(degree-i-1);
-            }
+
         }
         return "f(x) = " + s;
     }
@@ -210,6 +250,7 @@ public class Polynomial {
         return v;
     }
 
+    // Returns a duplicated version of a given array
     public static int[][] cloneArray(int[][] src) {
         int length = src.length;
         int[][] target = new int[length][src[0].length];
@@ -221,6 +262,7 @@ public class Polynomial {
 
 }
 
+// Pretty useless – for storing the input data
 class Tuple {
     int x, y;
     public Tuple(int x, int y) {

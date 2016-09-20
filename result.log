@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.25)  20 SEP 2016 00:04
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.25)  20 SEP 2016 00:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -23,10 +23,16 @@ File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
+(/usr/local/texlive/2016basic/texmf-dist/tex/latex/extsizes/extsizes.sty
+Package: extsizes 1996/10/08 v1.0 Non Standard LaTeX Package
 
-LaTeX Warning: Unused global option(s):
-    [30pt].
 
+Package ExtSizes Warning: It is better to use one of the extsizes classes,
+ if you can.
+
+(/usr/local/texlive/2016basic/texmf-dist/tex/latex/extsizes/size20.clo
+File: size20.clo 1999/11/11 NON-Standard LaTeX file (size option)
+))
 (./result.aux)
 \openout1 = `result.aux'.
 
@@ -42,30 +48,58 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 2.
 LaTeX Font Info:    ... okay on input line 2.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 2.
 LaTeX Font Info:    ... okay on input line 2.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 3.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 3.
- [1
+LaTeX Font Info:    Calculating math sizes for size <29.86> on input line 4.
 
-{/usr/local/texlive/2016basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (.
-/result.aux) ) 
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <14.93> not available
+(Font)              size <14.4> substituted on input line 4.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <29.86> not available
+(Font)              size <24.88> substituted on input line 4.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <14.93> not available
+(Font)              size <14.4> substituted on input line 4.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <29.86> not available
+(Font)              size <24.88> substituted on input line 4.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <14.93> not available
+(Font)              size <14.4> substituted on input line 4.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <29.86> on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <20.9019> on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <14.93> on input line 4.
+[1
+
+{/usr/local/texlive/2016basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+(./result.aux)
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 4.98pt have occurred.
+
+ ) 
 Here is how much of TeX's memory you used:
- 204 strings out of 494447
- 2214 string characters out of 6166766
- 48736 words of memory out of 5000000
- 3626 multiletter control sequences out of 15000+600000
- 3640 words of font info for 14 fonts, out of 8000000 for 9000
+ 263 strings out of 494447
+ 4870 string characters out of 6166766
+ 49127 words of memory out of 5000000
+ 3674 multiletter control sequences out of 15000+600000
+ 6381 words of font info for 23 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
- 23i,4n,17p,130b,107s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2016basic/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmmi10.pfb></usr/local/texlive/2016basic/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmr10.pfb></usr/local/texlive/2016basic/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmr7.pfb>
-Output written on result.pdf (1 page, 23574 bytes).
+ 23i,4n,19p,243b,107s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2016basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi1
+2.pfb></usr/local/texlive/2016basic/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mr17.pfb>
+Output written on result.pdf (1 page, 16732 bytes).
 PDF statistics:
- 20 PDF objects out of 1000 (max. 8388607)
- 13 compressed objects within 1 object stream
+ 16 PDF objects out of 1000 (max. 8388607)
+ 10 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
